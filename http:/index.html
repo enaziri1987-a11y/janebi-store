@@ -1,0 +1,100 @@
+function toggleCart() {
+    document.getElementById("cartPanel").classList.toggle("open");
+  }
+
+  function showPage(page) {
+    document.querySelectorAll(".page").forEach(p => p.classList.remove("active"));
+    document.getElementById("page-" + page).classList.add("active");
+    document.querySelectorAll("nav a").forEach(a => a.classList.remove("active"));
+    const activeLink = document.querySelector(nav a[data-page="${page}"]);
+    if (activeLink) activeLink.classList.add("active");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function scrollToProducts() {
+    showPage("home");
+    setTimeout(() => {
+      document.getElementById("products").scrollIntoView({ behavior: "smooth" });
+    }, 100);
+  }
+
+  function toggleTheme() {
+    document.body.classList.toggle("light-mode");
+    const btn = document.getElementById("themeBtn");
+    btn.textContent = document.body.classList.contains("light-mode") ? "☀️" : "🌙";
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    setTimeout(() => t.classList.remove("show"), 2500);
+  }
+
+  function handleLogin(e) {
+    e.preventDefault();
+    showToast("خوش آمدی! ✓");
+    setTimeout(() => showPage("home"), 800);
+  }
+
+  function handleSignup(e) {
+    e.preventDefault();
+    showToast("حساب ساخته شد! ✓");
+    setTimeout(() => showPage("login"), 800);
+  }
+
+  function handleContact(e) {
+    e.preventDefault();
+    showToast("پیام ارسال شد ✓");
+    e.target.reset();
+  }
+
+  function goToCheckout() {
+    if (cart.length === 0) {
+      showToast("سبد خرید خالیه!");
+      return;
+    }
+    toggleCart();
+    showPage("checkout");
+    renderCheckout();
+  }
+
+  function renderCheckout() {
+    const summary = document.getElementById("checkoutSummary");
+    const total = document.getElementById("checkoutTotal");
+    let sum = 0;
+    summary.innerHTML = "";
+    cart.forEach(i => {
+      sum += i.price * i.qty;
+      summary.innerHTML += 
+        <div class="cart-item">
+          <span>${i.name} × ${i.qty}</span>
+          <span>${(i.price * i.qty).toLocaleString('fa-IR')} تومان</span>
+        </div>
+      ;
+    });
+    total.textContent = "مبلغ نهایی: " + sum.toLocaleString('fa-IR') + " تومان";
+  }
+
+  function handleCheckout() {
+    const name = document.getElementById("shipName").value.trim();
+    const phone = document.getElementById("shipPhone").value.trim();
+    const address = document.getElementById("shipAddress").value.trim();
+    const card = document.getElementById("cardNum").value.trim();
+    if (!name || !phone || !address || !card) {
+      showToast("لطفاً همه فیلدها رو پر کن!");
+      return;
+    }
+    showToast("پرداخت موفق! سفارش ثبت شد ✓");
+    cart = [];
+    updateCart();
+    setTimeout(() => showPage("home"), 1500);
+  }
+
+  document.getElementById("cardNum").addEventListener("input", function(e) {
+    let v = e.target.value.replace(/\D/g, "").slice(0, 16);
+    e.target.value = v.replace(/(.{4})/g, "$1 ").trim();
+  });
+</script>
+</body>
+</html>
